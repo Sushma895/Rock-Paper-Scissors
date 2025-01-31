@@ -1,164 +1,112 @@
-
-   <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Rock Paper Scissors Game</title>
+    <title>Rock Paper Scissors Game</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f3f4f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            flex-direction: column;
-            color: #333;
-            background-color: aqua;
-        }
-        h1 {
-            font-size: 6 rem;
-            margin-bottom: 20px;
-            color: #333;
-            
-    
-        }
-        .game-container {
+            font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+            background-color: aqua;
         }
         .buttons {
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 20px;
             
         }
-        .button img {
-            width: 120px;
-            height: 120px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-        .button img:hover {
-            transform: scale(1.1);
-        }
         .button {
-            display: inline-block;
+            padding: 20px 30px;
+            font-size: 20px;
+            cursor: pointer;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            background-color: pink;
+        
         }
-        .result, .score {
-            margin-top: 20px;
-            font-size: 1.5rem;
+        .button:hover {
+            background-color:white;
+        }
+        .result {
+            margin-top: 30px;
+            font-size: 24px;
         }
         .score {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        #gameResult {
             font-weight: bold;
-        }
-        .player-choice, .computer-choice {
-            font-size: 1.2rem;
-            margin-top: 10px;
-        }
-        .game-status {
-            margin-top: 20px;
-            font-size: 1.5rem;
-        }
-        .reset-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 1rem;
-            background-color:#f8d;
-            color: rgb(17, 8, 8);
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .reset-button:hover {
-            background-color:#f3f6;
         }
     </style>
 </head>
 <body>
+    <h1>Rock Paper Scissors Game</h1>
+    
+    <div class="buttons">
+        <div class="button" id="rock">Rock</div>
+        <div class="button" id="paper">Paper</div>
+        <div class="button" id="scissors">Scissors</div>
+    </div>
 
-    <div class="game-container">
-        <h1>Rock Paper Scissors</h1>
-        <div class="buttons">
-            <div class="button" onclick="playGame('rock')">Rock</div>
-            <div class="button" onclick="playGame('paper')">Paper</div>
-            <div class="button" onclick="playGame('scissors')">Scissors</div>
-        </div>
+    <div class="result" id="gameResult">Choose your move!</div>
 
-        <div class="player-choice">
-            <strong>Your Choice:</strong>
-            <p id="playerChoice">-</p>
-        </div>
-        <div class="computer-choice">
-            <strong>Computer's Choice:</strong>
-            <p id="computerChoice">-</p>
-        </div>
-        
-        <div class="result" id="result"></div>
-
-        <div class="score">
-            <strong>Score:</strong> <span id="score">Player: 0 | Computer: 0</span>
-        </div>
-
-        <button class="reset-button" id="resetButton" onclick="resetGame()">Reset Game</button>
+    <div class="score">
+        <p>Player Score: <span id="playerScore">0</span></p>
+        <p>Computer Score: <span id="computerScore">0</span></p>
     </div>
 
     <script>
         let playerScore = 0;
         let computerScore = 0;
 
-        function playGame(playerChoice) {
-            // Set player's choice in the UI
-            document.getElementById('playerChoice').textContent = capitalize(playerChoice);
+        const choices = ['rock', 'paper', 'scissors'];
+        const playerScoreElement = document.getElementById('playerScore');
+        const computerScoreElement = document.getElementById('computerScore');
+        const gameResultElement = document.getElementById('gameResult');
 
-            // Randomly generate the computer's choice
-            const choices = ['rock', 'paper', 'scissors'];
-            const computerChoice = choices[Math.floor(Math.random() * 3)];
-            document.getElementById('computerChoice').textContent = capitalize(computerChoice);
+        const getComputerChoice = () => {
+            return choices[Math.floor(Math.random() * 3)];
+        };
 
-            // Determine the game result
-            let result = '';
+        const determineWinner = (playerChoice, computerChoice) => {
             if (playerChoice === computerChoice) {
-                result = "It's a draw!";
-            } else if (
+                return 'It\'s a tie!';
+            }
+
+            if (
                 (playerChoice === 'rock' && computerChoice === 'scissors') ||
                 (playerChoice === 'paper' && computerChoice === 'rock') ||
                 (playerChoice === 'scissors' && computerChoice === 'paper')
             ) {
-                result = "You win!";
                 playerScore++;
+                playerScoreElement.textContent = playerScore;
+                return 'You win!';
             } else {
-                result = "Computer wins!";
                 computerScore++;
+                computerScoreElement.textContent = computerScore;
+                return 'Computer wins!';
             }
+        };
 
-            // Display the result
-            document.getElementById('result').textContent = result;
+        const playGame = (playerChoice) => {
+            const computerChoice = getComputerChoice();
+            const result = determineWinner(playerChoice, computerChoice);
 
-            // Update the score
-            document.getElementById('score').textContent = Player: ${playerScore} | Computer: ${computerScore};
-        }
+            gameResultElement.textContent = `You chose ${playerChoice}, Computer chose ${computerChoice}. ${result}`;
+        };
 
-        function capitalize(str) {
-            return str.charAt(0).toUpperCase() + str.slice(1);
-        }
-
-        function resetGame() {
-            // Reset score and game state
-            playerScore = 0;
-            computerScore = 0;
-            document.getElementById('score').textContent = Player: 0 | Computer: 0;
-            document.getElementById('playerChoice').textContent = '-';
-            document.getElementById('computerChoice').textContent = '-';
-            document.getElementById('result').textContent = '';
-        }
+        document.getElementById('rock').addEventListener('click', () => playGame('rock'));
+        document.getElementById('paper').addEventListener('click', () => playGame('paper'));
+        document.getElementById('scissors').addEventListener('click', () => playGame('scissors'));
     </script>
-
 </body>
 </html>
+
+  
+           
+           
+           
+            
